@@ -58,6 +58,7 @@ fn run_instruction(i: Instruction, stack: &mut Vec<i32>) {
     match i.opcode {
         Opcode::PRINT => print(stack),
         Opcode::ADD => add(stack),  
+        Opcode::SUB => sub(stack),
         Opcode::PUSH => push(i.val_1, stack),
             _ => todo!()
     }
@@ -72,6 +73,13 @@ fn add(stack: &mut Vec<i32>) {
     let b = stack.pop().unwrap();
 
     stack.push(a+b);
+}
+
+fn sub(stack: &mut Vec<i32>) {
+    let a = stack.pop().unwrap();
+    let b = stack.pop().unwrap();
+
+    stack.push(b-a);
 }
 
 fn push(value: i32, stack: &mut Vec<i32>) {

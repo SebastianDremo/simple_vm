@@ -5,6 +5,10 @@ use std::str::FromStr;
 pub fn lex_instructions(instructions: Lines) -> Vec<vm::Instruction> {
     let mut lexed_instructions = Vec::new();
     for instruction in instructions {
+        if instruction.is_empty() {
+            continue;
+        }
+
         let s = instruction.split(' ').collect::<Vec<_>>(); 
 
         if s.len() == 3 {
@@ -24,7 +28,7 @@ pub fn lex_instructions(instructions: Lines) -> Vec<vm::Instruction> {
                     }
                 ); 
         }
-        else if s.len() ==1 {
+        else if s.len() == 1 {
             lexed_instructions.push(
                 vm::Instruction {
                     opcode: vm::Opcode::from_str(s[0]).unwrap(),
