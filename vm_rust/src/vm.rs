@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+#[derive(Debug)]
 pub enum Opcode {
     ADD,
     SUB, 
@@ -46,6 +47,34 @@ pub struct Instruction {
 }
 
 
-pub fn run_program(program: Vec<Instruction>, stack: Vec<i32>) {
-
+pub fn run_program(program: Vec<Instruction>) {
+    let mut stack: Vec<i32> = Vec::new();
+    for i in program {
+        run_instruction(i, &mut stack); 
+    }
 }
+
+fn run_instruction(i: Instruction, stack: &mut Vec<i32>) {
+    match i.opcode {
+        Opcode::PRINT => print(stack),
+        Opcode::ADD => add(stack),  
+        Opcode::PUSH => push(i.val_1, stack),
+            _ => todo!()
+    }
+}
+
+fn print(stack: &mut Vec<i32>) {
+    println!("{}", stack.last().unwrap());
+}
+
+fn add(stack: &mut Vec<i32>) {
+    let a = stack.pop().unwrap();
+    let b = stack.pop().unwrap();
+
+    stack.push(a+b);
+}
+
+fn push(value: i32, stack: &mut Vec<i32>) {
+    stack.push(value); 
+}
+
