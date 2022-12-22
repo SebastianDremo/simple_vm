@@ -11,7 +11,7 @@ cargo run
 rust_exit_code=$?
 if [ $rust_exit_code == 0 ];
 then 
-    cd ..
+   cd ..
     exit 0
 else 
     echo Program finished with $rust_exit_code code.
