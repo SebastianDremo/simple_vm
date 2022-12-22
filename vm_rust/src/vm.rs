@@ -47,14 +47,19 @@ pub struct Instruction {
 }
 
 
-pub fn run_program(program: Vec<Instruction>) {
+pub fn run_program(program: Vec<Instruction>) -> i32 {
     let mut stack: Vec<i32> = Vec::new();
     for i in program {
-        run_instruction(i, &mut stack); 
+        let exit_code = run_instruction(i, &mut stack); 
+        if exit_code != 0 {
+            return exit_code;
+        }
     }
+
+    return 0;
 }
 
-fn run_instruction(i: Instruction, stack: &mut Vec<i32>) {
+fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> i32 {
     match i.opcode {
         Opcode::PRINT => print(stack),
         Opcode::ADD => add(stack),  
@@ -63,9 +68,11 @@ fn run_instruction(i: Instruction, stack: &mut Vec<i32>) {
         Opcode::EQ => eq(stack),
         Opcode::PUSH => push(i.val_1, stack),
         Opcode::POP => pop(stack),
-        Opcode::RET => ret(i.val_1),
+        Opcode::RET => return i.val_1,
             _ => todo!()
     }
+
+    return 0; //all went fine
 }
 
 fn print(stack: &mut Vec<i32>) {
@@ -107,9 +114,3 @@ fn eq(stack: &mut Vec<i32>) {
 
     stack.push((a == b) as i32);
 }
-
-fn ret(exit_value: i32) {
-    std::process::exit(exit_value);
-}
-
-
