@@ -14,7 +14,8 @@ pub fn lex_instructions(instructions: Lines) -> Vec<vm::Instruction> {
         if s.len() == 3 {
             lexed_instructions.push(
                 vm::Instruction {
-                    opcode: vm::Opcode::from_str(s[0]).unwrap(),
+                    opcode: vm::Opcode::from_str(s[0])
+                        .expect(&format!("Could not lex {}", s[0])),
                     val_1: s[1].parse().unwrap(),
                     val_2: s[2].parse().unwrap()}
                 ); 
@@ -22,7 +23,8 @@ pub fn lex_instructions(instructions: Lines) -> Vec<vm::Instruction> {
         else if s.len() == 2 {
             lexed_instructions.push(
                 vm::Instruction {
-                    opcode: vm::Opcode::from_str(s[0]).unwrap(),
+                    opcode: vm::Opcode::from_str(s[0])
+                        .expect(&format!("Could not lex {}", s[0])),
                     val_1: s[1].parse().unwrap(),
                     val_2: -1
                     }
@@ -31,7 +33,8 @@ pub fn lex_instructions(instructions: Lines) -> Vec<vm::Instruction> {
         else if s.len() == 1 {
             lexed_instructions.push(
                 vm::Instruction {
-                    opcode: vm::Opcode::from_str(s[0]).unwrap(),
+                    opcode: vm::Opcode::from_str(s[0])
+                        .expect(&format!("Could not lex {}", s[0])),
                     val_1: -1,
                     val_2: -1
                     }
