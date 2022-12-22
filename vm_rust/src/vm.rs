@@ -46,7 +46,6 @@ pub struct Instruction {
     pub val_2: i32
 }
 
-
 pub fn run_program(program: Vec<Instruction>) -> i32 {
     let mut stack: Vec<i32> = Vec::new();
     for i in program {
@@ -66,6 +65,8 @@ fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> i32 {
         Opcode::SUB => sub(stack),
         Opcode::MUL => mul(stack),
         Opcode::EQ => eq(stack),
+        Opcode::LT => lt(stack),
+        Opcode::GT => gt(stack),
         Opcode::PUSH => push(i.val_1, stack),
         Opcode::POP => pop(stack),
         Opcode::RET => return i.val_1,
@@ -113,4 +114,18 @@ fn eq(stack: &mut Vec<i32>) {
     let b = stack.pop().unwrap();
 
     stack.push((a == b) as i32);
+}
+
+fn lt(stack: &mut Vec<i32>) {
+    let a = stack.pop().unwrap();
+    let b = stack.pop().unwrap();
+
+    stack.push((a < b) as i32);
+}
+
+fn gt(stack: &mut Vec<i32>) {
+    let a = stack.pop().unwrap();
+    let b = stack.pop().unwrap();
+
+    stack.push((a > b) as i32);
 }
