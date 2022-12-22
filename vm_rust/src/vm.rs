@@ -62,6 +62,7 @@ fn run_instruction(i: Instruction, stack: &mut Vec<i32>) {
         Opcode::MUL => mul(stack),
         Opcode::EQ => eq(stack),
         Opcode::PUSH => push(i.val_1, stack),
+        Opcode::POP => pop(stack),
             _ => todo!()
     }
 }
@@ -86,6 +87,10 @@ fn sub(stack: &mut Vec<i32>) {
 
 fn push(value: i32, stack: &mut Vec<i32>) {
     stack.push(value); 
+}
+
+fn pop(stack: &mut Vec<i32>) {
+    stack.pop();
 }
 
 fn mul(stack: &mut Vec<i32>) {
