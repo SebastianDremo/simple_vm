@@ -63,6 +63,7 @@ fn run_instruction(i: Instruction, stack: &mut Vec<i32>) {
         Opcode::EQ => eq(stack),
         Opcode::PUSH => push(i.val_1, stack),
         Opcode::POP => pop(stack),
+        Opcode::RET => ret(i.val_1),
             _ => todo!()
     }
 }
@@ -106,4 +107,9 @@ fn eq(stack: &mut Vec<i32>) {
 
     stack.push((a == b) as i32);
 }
+
+fn ret(exit_value: i32) {
+    std::process::exit(exit_value);
+}
+
 
