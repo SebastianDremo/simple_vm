@@ -11,29 +11,32 @@ pub fn lex_instructions(instructions: Lines) -> Vec<vm::Instruction> {
 
         let s = instruction.split(' ').collect::<Vec<_>>(); 
 
-        if s.len() == 2 {
+        if s.len() == 3 {
             lexed_instructions.push(
                 vm::Instruction {
                     opcode: vm::Opcode::from_str(s[0])
                         .expect(&format!("Could not lex {}", s[0])),
-                    val: s[1].parse().unwrap()
-                    }
+                    val_1: s[1].parse().unwrap(),
+                    val_2: s[2].parse().unwrap()}
                 ); 
-        }
-        else if s.len() == 1 && s[0].contains(":") { // for labels
+            }
+        else if s.len() == 2 {
             lexed_instructions.push(
                 vm::Instruction {
-                    opcode: vm::Opcode::LABEL,
-                    val: lexed_instructions.len(), //index of label in instructions vec
-                    s_val: String::from(s[0])
+                    opcode: vm::Opcode::from_str(s[0])
+                        .expect(&format!("Could not lex {}", s[0])),
+                    val_1: s[1].parse().unwrap(),
+                    val_2: -1
                     }
+                ); 
         }
         else if s.len() == 1 {
             lexed_instructions.push(
                 vm::Instruction {
                     opcode: vm::Opcode::from_str(s[0])
                         .expect(&format!("Could not lex {}", s[0])),
-                    val: -1
+                    val_1: -1,
+                    val_2: -1
                     }
                 ); 
         }
