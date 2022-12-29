@@ -42,8 +42,7 @@ impl FromStr for Opcode {
 
 pub struct Instruction {
     pub opcode: Opcode,
-    pub val_1: i32, 
-    pub val_2: i32
+    pub val: i32 
 }
 
 pub fn run_program(program: Vec<Instruction>) -> i32 {
@@ -67,9 +66,9 @@ fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> i32 {
         Opcode::EQ => eq(stack),
         Opcode::LT => lt(stack),
         Opcode::GT => gt(stack),
-        Opcode::PUSH => push(i.val_1, stack),
+        Opcode::PUSH => push(i.val, stack),
         Opcode::POP => pop(stack),
-        Opcode::RET => return i.val_1,
+        Opcode::RET => return i.val,
             _ => todo!()
     }
 
