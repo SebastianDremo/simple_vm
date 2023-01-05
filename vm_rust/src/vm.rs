@@ -14,7 +14,8 @@ pub enum Opcode {
     PRINT, 
     POP, 
     PUSH, 
-    RET
+    RET,
+    LABEL
 }
 
 impl FromStr for Opcode {
@@ -35,6 +36,7 @@ impl FromStr for Opcode {
             "POP" => Ok(Opcode::POP), 
             "PUSH" => Ok(Opcode::PUSH),
             "RET" => Ok(Opcode::RET),
+            "LABEL" => Ok(Opcode::LABEL),
                 _ => Err(())
         }
     }
@@ -45,19 +47,22 @@ pub struct Instruction {
     pub val: i32 
 }
 
-pub fn run_program(program: Vec<Instruction>) -> i32 {
+pub fn run_program(program: HashMap<String, Instruction>) -> i32 {
     let mut stack: Vec<i32> = Vec::new();
-    for i in program {
-        let exit_code = run_instruction(i, &mut stack); 
-        if exit_code != 0 {
-            return exit_code;
+    for (key, instr) in program {
+        let result = run_instruction(instr, &mut stack); 
+        match result {
+            Some(val) => return val,
+            None => return 0;
         }
     }
 
     return 0;
 }
 
-fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> i32 {
+//i think RET should not be implemented this way -> it should just be STOP without 
+//returning any error code 
+fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> Option<String> {
     match i.opcode {
         Opcode::PRINT => print(stack),
         Opcode::ADD => add(stack),  
@@ -68,11 +73,11 @@ fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> i32 {
         Opcode::GT => gt(stack),
         Opcode::PUSH => push(i.val, stack),
         Opcode::POP => pop(stack),
-        Opcode::RET => return i.val,
+        Opcode::RET => return Some(i.val),
             _ => todo!()
     }
 
-    return 0; //all went fine
+    return None; //all went fine
 }
 
 fn print(stack: &mut Vec<i32>) {
