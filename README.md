@@ -37,7 +37,7 @@ Write instrucions in `program.vm` file.
 Execute `./run` which will run the instrucions 
 
 ## EXAMPLE PROGRAM
-`
+```
 PUSH 12
 PUSH 20
 ADD
@@ -53,5 +53,6 @@ STOP
 NOT_EQUAL:
 PUSH 0 
 STOP
-`
+```
+
 
