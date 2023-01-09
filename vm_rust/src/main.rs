@@ -17,5 +17,7 @@ fn safe_main() -> i32 {
     
     let exit_code = vm::run_program(lexed_instructions);
     return exit_code;
+
+
 }
 

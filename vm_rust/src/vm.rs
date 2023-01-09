@@ -44,7 +44,7 @@ impl FromStr for Opcode {
 
 pub struct Instruction {
     pub opcode: Opcode,
-    pub val: i32 
+    pub val: i32
 }
 
 pub fn run_program(program: HashMap<String, Instruction>) -> i32 {

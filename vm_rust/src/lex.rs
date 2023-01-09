@@ -1,50 +1,47 @@
-use std::str::Lines;
-use crate::vm;
-use std::str::FromStr;
+use crate::vm::{Instruction, Opcode};
+use std::{
+    collections::HashMap,
+    str::{FromStr, Lines},
+};
 
-pub fn lex_instructions(instructions: Lines) -> Vec<vm::Instruction> {
-    let mut lexed_instructions: HashMap<String, vm::Instruction> = HashMap::new();
-    for (i, instruction) in instructions.iter().enumerate() {
-        if instruction.is_empty() {
-            continue;
-        }
+pub fn lex_instructions(instructions: Lines) -> HashMap<String, Instruction> {
+    let program: HashMap<String, Instruction> = HashMap::new();
 
-        let s = instruction.split(' ').collect::<Vec<_>>(); 
+    for (i, instruction) in instructions.enumerate() {
+        let s: Vec<&str> = instruction.split(' ').collect();
 
         //push
         if s.len() == 2 {
-            lexed_instructions.insert(
+            program.insert(
                 i.to_string(),
-                vm::Instruction {
-                    opcode: vm::Opcode::from_str(s[0])
-                        .expect(&format!("Could not lex push op {}", s[0])),
+                Instruction {
+                    opcode: Opcode::from_str(s[0]).unwrap(),
                     val: s[1].parse().unwrap()
-                    }
-                ); 
+                },
+            );
         }
-        //labels
-        else if s.contains(":") {
-            lexed_instructions.insert(
-                s[0].replace(":", ""), //no need for ':' in key
-                vm::Instruction {
-                    Opcode::LABEL,
+        //label
+        else if s.contains(&":") {
+            program.insert(
+                s[0].replace(":", ""),
+                Instruction {
+                    opcode: Opcode::LABEL,
                     val: -1
-                    }
-                ); 
+                }
+            );           
         }
-        //everything else
-        else if s.len() == 1 {
-            lexed_instructions.insert(
+        //every other OP 
+        else {
+            program.insert(
                 i.to_string(),
-                vm::Instruction {
-                    opcode: vm::Opcode::from_str(s[0])
-                        .expect(&format!("Could not lex op {}", s[0])),
-                    val: -1
-                    }
-                ); 
+                Instruction {
+                    opcode: Opcode::from_str(s[0]).unwrap(),
+                    val: -1 
+                }
+            );     
         }
+
     }
 
-    return lexed_instructions;
+    return program;
 }
-
