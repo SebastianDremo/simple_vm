@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+use std::result;
 use std::str::FromStr;
 
 #[derive(Debug)]
@@ -14,7 +16,7 @@ pub enum Opcode {
     PRINT, 
     POP, 
     PUSH, 
-    RET,
+    STOP,
     LABEL
 }
 
@@ -35,7 +37,7 @@ impl FromStr for Opcode {
             "PRINT" => Ok(Opcode::PRINT),
             "POP" => Ok(Opcode::POP), 
             "PUSH" => Ok(Opcode::PUSH),
-            "RET" => Ok(Opcode::RET),
+            "STOP" => Ok(Opcode::STOP),
             "LABEL" => Ok(Opcode::LABEL),
                 _ => Err(())
         }
@@ -47,22 +49,17 @@ pub struct Instruction {
     pub val: i32
 }
 
-pub fn run_program(program: HashMap<String, Instruction>) -> i32 {
+pub fn run_program(program: HashMap<String, Instruction>) {
     let mut stack: Vec<i32> = Vec::new();
     for (key, instr) in program {
-        let result = run_instruction(instr, &mut stack); 
-        match result {
-            Some(val) => return val,
-            None => return 0;
+        let is_label = run_instruction(instr, &mut stack); 
+        if  is_label {
+
         }
     }
-
-    return 0;
 }
 
-//i think RET should not be implemented this way -> it should just be STOP without 
-//returning any error code 
-fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> Option<String> {
+fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> Option<bool> {
     match i.opcode {
         Opcode::PRINT => print(stack),
         Opcode::ADD => add(stack),  
@@ -73,8 +70,9 @@ fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> Option<String> {
         Opcode::GT => gt(stack),
         Opcode::PUSH => push(i.val, stack),
         Opcode::POP => pop(stack),
-        Opcode::RET => return Some(i.val),
-            _ => todo!()
+        Opcode::STOP => return None,
+        Opcode::LABEL => return Some(true),
+            _ => return None
     }
 
     return None; //all went fine

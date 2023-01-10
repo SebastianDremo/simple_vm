@@ -37,8 +37,8 @@ pub fn lex_instructions(instructions: Lines) -> HashMap<String, Instruction> {
                 Instruction {
                     opcode: Opcode::from_str(s[0]).unwrap(),
                     val: -1 
-                }
-            );     
+                    }
+                );     
         }
 
     }
