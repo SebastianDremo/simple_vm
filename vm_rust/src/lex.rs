@@ -10,6 +10,7 @@ pub fn lex_instructions(instructions: Lines) -> HashMap<String, Instruction> {
     for (i, instruction) in instructions.enumerate() {
         let s: Vec<&str> = instruction.split(' ').collect();
 
+        //TODO it will break with jumps, they will have value of type &str not i32
         //push
         if s.len() == 2 {
             program.insert(

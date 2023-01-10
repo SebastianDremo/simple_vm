@@ -1,7 +1,7 @@
 use std::collections::HashMap;
 use std::str::FromStr;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum Opcode {
     ADD,
     SUB, 
@@ -43,6 +43,7 @@ impl FromStr for Opcode {
     }
 }
 
+//TODO jumps will have &str value not i32
 pub struct Instruction {
     pub opcode: Opcode,
     pub val: i32
@@ -50,28 +51,29 @@ pub struct Instruction {
 
 pub fn run_program(program: HashMap<String, Instruction>) {
     let mut stack: Vec<i32> = Vec::new();
-    for (key, instr) in program {
-        let is_label = run_instruction(instr, &mut stack).unwrap(); 
-        if is_label {
-            println!("LABEL {}", key);
+    for (_key, instr) in program {
+        //on STOP op we need to just finish the execution of VM
+        if instr.opcode == Opcode::STOP {
+            break;
         }
+
+        run_instruction(instr, &mut stack)
     }
 }
 
-fn run_instruction(i: Instruction, stack: &mut Vec<i32>) -> bool {
+fn run_instruction(i: Instruction, stack: &mut Vec<i32>) {
     match i.opcode {
-        Opcode::PRINT => { print(stack); return false },
-        Opcode::ADD => { add(stack); return false },  
-        Opcode::SUB => { sub(stack); return false },
-        Opcode::MUL => { mul(stack); return false },
-        Opcode::EQ => { eq(stack); return false },
-        Opcode::LT => { lt(stack); return false },
-        Opcode::GT => { gt(stack); return false },
-        Opcode::PUSH => { push(i.val, stack); return false },
-        Opcode::POP => { pop(stack); return false },
-        Opcode::STOP => { stop(stack); return false },
-        Opcode::LABEL => return true,
-            _ => return false
+        Opcode::PRINT => print(stack),
+        Opcode::ADD => add(stack),  
+        Opcode::SUB => sub(stack),
+        Opcode::MUL => mul(stack),
+        Opcode::EQ => eq(stack),
+        Opcode::LT => lt(stack),
+        Opcode::GT => gt(stack),
+        Opcode::PUSH => push(i.val, stack),
+        Opcode::POP => pop(stack),
+        Opcode::LABEL => return,
+            _ => return
     }
 
 }
