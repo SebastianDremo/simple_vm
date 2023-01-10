@@ -18,9 +18,9 @@ in C# (in which I code daily)
 - [x] LT     | check if value at the top of the stack is less than second value on the stack
 - [x] GT     | check if value at the top of the stack is less than second value on the stack
 - [x] EQ     | check if value at the top of the stack is equal than second value on the stack
-- [] JMP    | jump to given label
-- [] JMPF   | jump to given label if value at the top of the stack is 0
-- [] JMPT   | jump to given label if value at the top of the stack is 1
+- [ ] JMP    | jump to given label
+- [ ] JMPF   | jump to given label if value at the top of the stack is 0
+- [ ] JMPT   | jump to given label if value at the top of the stack is 1
 - [x] PRINT  | print value at the top of the stack
 - [x] POP    | pop the value at the top of the stack
 - [x] PUSH   | push the value to the top of the stack
