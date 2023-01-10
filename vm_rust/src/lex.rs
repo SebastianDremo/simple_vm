@@ -5,7 +5,7 @@ use std::{
 };
 
 pub fn lex_instructions(instructions: Lines) -> HashMap<String, Instruction> {
-    let program: HashMap<String, Instruction> = HashMap::new();
+    let mut program: HashMap<String, Instruction> = HashMap::new();
 
     for (i, instruction) in instructions.enumerate() {
         let s: Vec<&str> = instruction.split(' ').collect();
