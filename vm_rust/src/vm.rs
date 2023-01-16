@@ -46,18 +46,19 @@ impl FromStr for Opcode {
 //TODO jumps will have &str value not i32
 pub struct Instruction {
     pub opcode: Opcode,
-    pub val: i32
+    pub val: i32,
+    pub jmp_val: String
 }
 
 pub fn run_program(program: HashMap<String, Instruction>) {
     let mut stack: Vec<i32> = Vec::new();
-    for (_key, instr) in program {
-        //on STOP op we need to just finish the execution of VM
-        if instr.opcode == Opcode::STOP {
-            break;
+    for (key, instr) in program {
+        match instr.opcode {
+            Opcode::JMP => key = instr.jmp_val,
+            Opcode::JMPT => { if stack.last().unwrap().to_owned() == 1 { key = instr.jmp_val }},
+            Opcode::JMPF => { if stack.last().unwrap().to_owned() == 0 { key = instr.jmp_val }},
+            _ => run_instruction(instr, &mut stack)
         }
-
-        run_instruction(instr, &mut stack)
     }
 }
 
