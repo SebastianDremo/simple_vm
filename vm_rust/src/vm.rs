@@ -43,44 +43,54 @@ impl FromStr for Opcode {
     }
 }
 
-//TODO jumps will have &str value not i32
 pub struct Instruction {
     pub opcode: Opcode,
     pub val: i32,
     pub jmp_val: String
 }
 
-pub fn run_program(program: HashMap<String, Instruction>) {
+pub fn run_program(program: Vec<Instruction>) {
     let mut stack: Vec<i32> = Vec::new();
-    for (key, instr) in program {
-        match instr.opcode {
-            Opcode::JMP => key = instr.jmp_val,
-            Opcode::JMPT => { if stack.last().unwrap().to_owned() == 1 { key = instr.jmp_val }},
-            Opcode::JMPF => { if stack.last().unwrap().to_owned() == 0 { key = instr.jmp_val }},
-            _ => run_instruction(instr, &mut stack)
+    let mut tag_indexes: HashMap<&String, usize> = HashMap::new();
+    let mut i: usize = 0;
+    let program_size: usize = program.len();
+    
+    loop {
+        match program[i].opcode {
+            Opcode::PRINT => print(&mut stack),
+            Opcode::ADD => add(&mut stack),  
+            Opcode::SUB => sub(&mut stack),
+            Opcode::MUL => mul(&mut stack),
+            Opcode::EQ => eq(&mut stack),
+            Opcode::LT => lt(&mut stack),
+            Opcode::GT => gt(&mut stack),
+            Opcode::PUSH => push(program[i].val, &mut stack),
+            Opcode::POP => pop(&mut stack),
+            Opcode::LABEL => {
+                println!("LOG: Saving label {} in memory...", program[i].jmp_val);
+                tag_indexes.insert(&program[i].jmp_val, i);
+            }
+            Opcode::JMP => {
+                println!("LOG: Jumping to {}", program[i].jmp_val);
+                i = tag_indexes.get(&program[i].jmp_val)
+                    .expect("ERROR: Should find jmp label.").clone();
+                continue;
+            }
+                _ => todo!()
         }
+
+        i = i + 1;
+        if i > program_size {
+            break;
+        }
+
+
     }
 }
 
-fn run_instruction(i: Instruction, stack: &mut Vec<i32>) {
-    match i.opcode {
-        Opcode::PRINT => print(stack),
-        Opcode::ADD => add(stack),  
-        Opcode::SUB => sub(stack),
-        Opcode::MUL => mul(stack),
-        Opcode::EQ => eq(stack),
-        Opcode::LT => lt(stack),
-        Opcode::GT => gt(stack),
-        Opcode::PUSH => push(i.val, stack),
-        Opcode::POP => pop(stack),
-        Opcode::LABEL => return,
-            _ => return
-    }
-
-}
 
 fn print(stack: &mut Vec<i32>) {
-    println!("{}", stack.last().unwrap());
+    println!("VM: {}", stack.last().unwrap());
 }
 
 fn add(stack: &mut Vec<i32>) {
